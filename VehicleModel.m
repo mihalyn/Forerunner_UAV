@@ -1,6 +1,16 @@
 function output=VehicleModel(input)
 
 
+% input(1): v
+% input(2): phi_dot legyezési szögsebesség
+% input(3): beta ??
+% input(4): longitudinal force
+% input(5): steering angle/kormányszög
+
+% output(1): longitudinal acceleration
+% output(2): phi_dotdot legyezési szöggyorsulás
+% output(3): beta_dot
+
 %Longitudinal Vehicle Model
 
     %Constants
