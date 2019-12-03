@@ -3,9 +3,10 @@ clear all;
 addpath('car_model', 'quadcopter_model');
 
 % Simulation variables
-dT = 0.005;         % [s]
+ts = 0.025;         % [s]
 duration = 50;      % [s]
-time = [0:dT:duration-dT];
+time = 0:ts:duration-ts;
+tmax = 0.5;
 
 % Generate reference signals for the UGV model
 
@@ -22,16 +23,19 @@ Steering_in = timeseries(Steering_ref, time);
 
 % Initialize UAV model
 
-time_for_traj = 1; % [s]
 traj_res = 20;
-xyz = [linspace(0,cos(UGV_init(2))*UGV_init(1)*time_for_traj,traj_res); ...
-    linspace(0,sin(UGV_init(2))*UGV_init(1)*time_for_traj,traj_res); 20*ones(1,traj_res)];
+xyz = [linspace(0,cos(UGV_init(2))*UGV_init(1)*tmax,traj_res); ...
+    linspace(0,sin(UGV_init(2))*UGV_init(1)*tmax,traj_res); 20*ones(1,traj_res)];
 xyz0 = [0;0;0];
 %plot3(xyz(1,:), xyz(2,:), xyz(3,:));
+%ts = 0.025;
+t_mpc=0.05;
+h=4;
+tmax = 0.5;   % time for trajectory
 
 initialEuler = deg2rad([0, 0, UGV_init(2), 0, 0, 0]);
 initialPos = [0, 0, 0, UGV_init(1), 0, 0];
 
-qc_setup(xyz, xyz0, time_for_traj);
+qc_setup(xyz, xyz0, tmax, ts, t_mpc, h);
 
 

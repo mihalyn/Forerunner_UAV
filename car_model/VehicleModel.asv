@@ -1,19 +1,13 @@
-function output = VehicleModel(u, ts, UGV_init)
+function [v_next, phi_dot_next, beta_next] = VehicleModel(input, ts)
 
-    persistent v_k phi_dot_k beta_k step
+    persistent v_k phi_dot_k beta_k
 
-    if isempty(v_k)
+    ifndef(v_k)
         v_k = UGV_init(1);
-        step = 1;
-    end
-    if isempty(phi_dot_k)
         phi_dot_k = UGV_init(2);
-    end
-    if isempty(beta_k)
         beta_k = UGV_init(3);
     end
-    disp([num2str(step) num2str(u')]);
-    disp(size(u));
+
     % input(1): v
     % input(2): phi_dot legyezési szögsebesség
     % input(3): beta sideslip
@@ -33,7 +27,7 @@ function output = VehicleModel(u, ts, UGV_init)
     ro=1.2; %Density of the air
     
     %Equations
-    v_next =((-1/2*(v_k^2*A*ro*C)+u(1))/m)*ts + v_k;
+    v_next =((-1/2*(v_k^2*A*ro*C)+input(1))/m)*ts + v_k;
 
     % Lateral Vehicle Model
 
@@ -46,13 +40,19 @@ function output = VehicleModel(u, ts, UGV_init)
     l2=1.9;     %Distance2
 
     %Equations
-    phi_dot_next = (phi_dot_k*(-1*C1*l1^2 - C2*l2^2)/abs(v_k)/J + beta_k*(-1*C1*l1 + C2*l2)/J + u(2)*C1*l1/J)*ts + phi_dot_k;
-    beta_next = (phi_dot_k*(-1*C1*l1 + C2*l2)/m/abs(v_k)^2-1 + beta_k*(-1*C1-C2)/m/abs(v_k) + u(2)*C1/m/abs(v_k))*ts + beta_k;
+    phi_dot_next = (phi_dot_k*(-1*C1*l1^2 - C2*l2^2)/abs(v_k)/J beta_k*(-1*C1*l1 + C2*l2)/J + input(2)*C1*l1/J)*ts + phi_dot_k;
+    beta_next = (phi_dot_next*(-1*C1*l1 + C2*l2)/m/abs(v_k)^2-1 (-1*C1-C2)/m/abs(v);
+
+    B=[C1*l1/J;
+        C1/m/abs(v)];
     
-    output = [v_next phi_dot_next beta_next];
-    disp(output);
-    v_k = v_next;
-    phi_dot_k = phi_dot_next;
-    beta_k = beta_next;
-    step = step + 1;
+    C=[1,0];
+    
+   
+
+    out2=A*input(2:3)+B*(input(2)*v/abs(v));
+
+
+
+
 end

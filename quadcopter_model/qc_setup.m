@@ -1,4 +1,4 @@
-function [ s, sd, sdd, P, G, G_roll, G_pitch, G_yaw, S, R, Q ] = qc_setup(xyz, xyz0, tmax)
+function [ s, sd, sdd, P, G, G_roll, G_pitch, G_yaw, S, R, Q ] = qc_setup(xyz, xyz0, tmax, ts, t_mpc, h)
 %QC_SETUP gets xyz, xyz0, tmax, ts, tmpc, initialEuler, initialPos
 %   Detailed explanation goes here
 
@@ -6,9 +6,7 @@ function [ s, sd, sdd, P, G, G_roll, G_pitch, G_yaw, S, R, Q ] = qc_setup(xyz, x
 % initialPos = [0, 0, 0, 0, 0, 0];
 % 
 % tmax = 5;
-ts = 0.025;
-t_mpc=0.05;
-h=4;
+
 % 
 % % Trajectory building - q(r) function
 % 
@@ -26,6 +24,7 @@ h=4;
 assignin('base', 'P', P);
 [ As, Bs ]      = qc_sim_trajlin(P,t_mpc);
 [ G ]           = qc_num_trajlin(Bs,s,t_mpc,tmax);  %constant
+assignin('base', 'G', G);
 % Controller tuning for LPV inner loop
 [ G_roll,...
   G_pitch,...
@@ -34,6 +33,8 @@ assignin('base', 'G_roll', G_roll);
 assignin('base', 'G_pitch', G_pitch);
 assignin('base', 'G_yaw', G_yaw);
 [ S, R, Q ]     = qc_mpcweight(h);  %constant
-
+assignin('base', 'S', S);
+assignin('base', 'R', R);
+assignin('base', 'Q', Q);
 end
 

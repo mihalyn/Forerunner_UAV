@@ -96,6 +96,7 @@ if(rem(t0,t_mpc)==0 && is_on)
     radlim=deg2rad(deglim);
     lb=repmat([-z -radlim-phi -radlim-theta -radlim-psi]',h-1,1);
     ub=repmat([ 30-z  radlim-phi  radlim-theta  radlim-psi]',h-1,1);
+
     %du=fminunc(@(du)cost(A,B,C,R,Q,d_r,d_x_k,du),du_prev);
     tic;
     [du,cost_k]=fmincon(@(du)cost(obs,cctr_chain,Q,R,S,d_r,d_x_k,du),du_prev,Ac,bc,Aceq,bceq,lb,ub);
