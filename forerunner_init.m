@@ -24,9 +24,9 @@ Steering_in = timeseries(Steering_ref, time);
 
 % Initialize UAV model
 
-traj_res = 20;
+traj_res = 100;
 xyz = [linspace(0,cos(UGV_init(2))*UGV_init(1)*tmax,traj_res); ...
-    linspace(0,sin(UGV_init(2))*UGV_init(1)*tmax,traj_res); 20*ones(1,traj_res)];
+    linspace(0,sin(UGV_init(2))*UGV_init(1)*tmax,traj_res); 100*ones(1,traj_res)];
 xyz0 = [0;0;0];
 %plot3(xyz(1,:), xyz(2,:), xyz(3,:));
 ts = 0.025;
@@ -34,8 +34,8 @@ t_mpc=0.05;
 h=4;
 tmax = 0.5;   % time for trajectory
 
-initialEuler = deg2rad([0, 0, UGV_init(2), 0, 0, 0]);
-initialPos = [0, 0, 0, UGV_init(1), 0, 0];
+initialEuler = deg2rad([0, 0, 0, 0, 0, 0]);
+initialPos = [0, 0, 0, 0, 0, 0];
 
 qc_setup(xyz, xyz0, tmax, ts, t_mpc, h);
 

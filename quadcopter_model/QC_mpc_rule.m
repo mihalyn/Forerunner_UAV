@@ -1,4 +1,4 @@
-function out = QC_mpc_rule(u, s, sd, sdd, P, h, t_mpc, G, tmax ,Q,R,S )
+function qc_out = QC_mpc_rule(u, s, sd, sdd, P, h, t_mpc, G, tmax ,Q,R,S )
 %% Nominal control supplemented with MPC error regulation
 % 
 %   - Nominal control is computed from trajectory spline and hence independent
@@ -15,7 +15,7 @@ function out = QC_mpc_rule(u, s, sd, sdd, P, h, t_mpc, G, tmax ,Q,R,S )
 %
 
 persistent du_prev plantEstimation
-t0=u(1);
+t0=u(1) - tmax*u(8);
 k=floor(t0/t_mpc)+1; %FIXME!!!
 sldiagviewer.reportInfo(sprintf('Step: %d',k))
 %t_mpc=0.2; %FIXME!!
@@ -114,7 +114,7 @@ if(rem(t0,t_mpc)==0 && is_on)
     plantEstimation(floor(t0/t_mpc)+1)=timeseries(y_sim',t(1:end-1));
     assignin('base','plantEstimation',plantEstimation)    
 end
-out = [z phi theta psi cost_k t_opt du(1:u_dim)']+[ du(1:u_dim)' zeros(1,x_dim)]; %zeros(1,u_dim+x_dim)];
+qc_out = [z phi theta psi cost_k t_opt du(1:u_dim)']+[ du(1:u_dim)' zeros(1,x_dim)]; %zeros(1,u_dim+x_dim)];
 
 %out = [z phi theta psi cost_k t_opt du(1:du_dim)']+[du(1:u_dim)' zeros(1,x_dim)];
 
