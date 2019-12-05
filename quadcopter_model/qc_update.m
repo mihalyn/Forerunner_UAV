@@ -5,7 +5,7 @@ function out = qc_update(u, traj_res, tmax)
     
     if isempty(traject_update)
         traject_update = 0;
-        purposed_track = [0;0;0;];
+        purposed_track = [0;0;0];
     end
     
     t_actual = u(1);
@@ -19,6 +19,7 @@ function out = qc_update(u, traj_res, tmax)
         UGV_yaw = u(6);
         UGV_yaw_dot = u(7);
         
+        
         UAV_pos = u(9:11);
         %UAV_vel = UAV_meas(4:6);
         %UAV_euler = UAV_meas(7:9);
@@ -30,17 +31,22 @@ function out = qc_update(u, traj_res, tmax)
             xyz = [xyz [UGV_pos(1) + dt*UGV_vel*cos(UGV_yaw + dt*UGV_yaw_dot); ...
                 UGV_pos(2) + dt*UGV_vel*sin(UGV_yaw + dt*UGV_yaw_dot); 100]];
         end
+        s1 = csape(0:length(xyz)-1, xyz);
+        sd1 = fnder(s1);
+        sdd1 = fnder(sd1);
+        xyz = xyz(:,3:5);
         purposed_track = [purposed_track xyz];
        
         [s, sd, sdd] = qc_trajgen(xyz, xyz(:,1), tmax, ts);
         figure(1);
         plot(purposed_track(1,:), purposed_track(2,:));
         hold on
-        fnplt(s);
+        %fnplt(s);
+        fnplt(s1);
         hold off
-        assignin('base', 's', s);
-        assignin('base', 'sd', sd);
-        assignin('base', 'sdd', sdd);
+        assignin('base', 's', s1);
+        assignin('base', 'sd', sd1);
+        assignin('base', 'sdd', sdd1);
         
         if t_actual ~= 0
             traject_update = traject_update + 1;
