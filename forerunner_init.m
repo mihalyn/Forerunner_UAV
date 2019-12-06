@@ -1,6 +1,6 @@
 clear all;
 
-addpath('car_model', 'quadcopter_model');
+addpath('car_model_cont', 'car_model_discr', 'quadcopter_model');
 
 % Simulation variables
 ts_car = 0.005;         % [s]
@@ -26,16 +26,19 @@ Steering_in = timeseries(Steering_ref, time);
 
 traj_res = 5;
 xyz = [linspace(0,cos(UGV_init(2))*UGV_init(1)*tmax,traj_res); ...
-    linspace(0,sin(UGV_init(2))*UGV_init(1)*tmax,traj_res); 100*ones(1,traj_res)];
-xyz0 = [0;0;100];
+    linspace(0,sin(UGV_init(2))*UGV_init(1)*tmax,traj_res); 10*ones(1,traj_res)];
+xyz0 = [0;0;10];
 %plot3(xyz(1,:), xyz(2,:), xyz(3,:));
+        
 ts = 0.025;
 t_mpc=0.05;
 h=4;
 tmax = 0.5;   % time for trajectory
 
-initialEuler = deg2rad([0, 0, 0, 0, 0, 0]);
-initialPos = [0, 0, 0, 0, 0, 0];
+initialEuler = deg2rad([0, 0, UGV_init(2)+pi, 0, 0, 0]);
+%initialPos = [0, 0, 10, UGV_init(1)*cos(UGV_init(2)), UGV_init(1)*sin(UGV_init(2)), 0];
+initialPos = [0, 0, 10, 0, 0, 0];
+
 
 qc_setup(xyz, xyz0, tmax, ts, t_mpc, h);
 
