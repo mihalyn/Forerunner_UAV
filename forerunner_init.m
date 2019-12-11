@@ -33,11 +33,11 @@ xyz0 = [0;0;10];
 ts = 0.025;
 t_mpc=0.05;
 h=4;
-tmax = 0.5;   % time for trajectory
+%tmax = 0.5;   % time for trajectory
 
 initialEuler = deg2rad([0, 0, UGV_init(2)+pi, 0, 0, 0]);
 %initialPos = [0, 0, 10, UGV_init(1)*cos(UGV_init(2)), UGV_init(1)*sin(UGV_init(2)), 0];
-initialPos = [0, 0, 10, 0, 0, 0];
+initialPos = [0, 0, 10, 1, 0, 0];
 
 
 qc_setup(xyz, xyz0, tmax, ts, t_mpc, h);

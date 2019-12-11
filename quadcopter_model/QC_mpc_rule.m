@@ -1,4 +1,4 @@
-function qc_out = QC_mpc_rule(u, s, sd, sdd, P, h, t_mpc, G, tmax ,Q,R,S )
+function qc_out = QC_mpc_rule(u, sdd,  P, tmax)
 %% Nominal control supplemented with MPC error regulation
 % 
 %   - Nominal control is computed from trajectory spline and hence independent
@@ -18,9 +18,9 @@ function qc_out = QC_mpc_rule(u, s, sd, sdd, P, h, t_mpc, G, tmax ,Q,R,S )
 
 
 t0=u(1) - tmax*u(8);
-a = fnval(sdd,t0);
+a = fnval(sdd, t0);
 
-disp(a);
+%disp(a);
 % Inverted linearized equations
 
 z = (a(3)+P.gravity)*P.mass; % sum lift forces = m*a
@@ -28,5 +28,5 @@ theta = atan(a(1)/(a(3)+P.gravity));
 phi = atan(-cos(theta)*a(2)/(a(3)+P.gravity));
 psi = 0;
 
-qc_out = [z phi theta psi a' t0];
+qc_out = [z phi theta psi a'];
 end
