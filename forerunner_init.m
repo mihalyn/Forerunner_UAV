@@ -10,16 +10,20 @@ tmax = 0.5;
 
 % Generate reference signals for the UGV model
 
+transition = 1/20;
+
 UGV_init = [1, 0, 0];
 
 Force_ref(1:length(time)/2) = 50;
-Force_ref(length(time)/2:length(time)) = 20;
+Force_ref(length(time)/2:length(time)) = 50;
 Force_in = timeseries(Force_ref, time);
 
-Steering_ref(1:length(time)/4) = pi/3;
-Steering_ref(length(time)/4:2*length(time)/4) = -pi/4;
-Steering_ref(2*length(time)/4:3*length(time)/4) = pi/6;
-Steering_ref(3*length(time)/4:length(time)) = -pi/8;
+Steering_ref = zeros(length(time), 1);
+Steering_ref(1:length(time)/4) = 0;
+Steering_ref(length(time)/4:(length(time)*(1/4 + transition))) = linspace(0,pi/12, duration*transition/ts_car+1); % transition
+Steering_ref(length(time)/4:2*length(time)/4) = pi/12;
+Steering_ref(2*length(time)/4:3*length(time)/4) = pi/12;
+Steering_ref(3*length(time)/4:length(time)) = pi/12;
 Steering_in = timeseries(Steering_ref, time);
 
 % Initialize UAV model
@@ -30,12 +34,12 @@ xyz = [linspace(0,cos(UGV_init(2))*UGV_init(1)*tmax,traj_res); ...
 xyz0 = [0;0;10];
 %plot3(xyz(1,:), xyz(2,:), xyz(3,:));
         
-ts = 0.025;
+ts = 0.005;
 t_mpc=0.05;
 h=4;
 %tmax = 0.5;   % time for trajectory
 
-initialEuler = deg2rad([0, 0, UGV_init(2)+pi, 0, 0, 0]);
+initialEuler = deg2rad([0, 0, 0, 0, 0, 0]);
 %initialPos = [0, 0, 10, UGV_init(1)*cos(UGV_init(2)), UGV_init(1)*sin(UGV_init(2)), 0];
 initialPos = [0, 0, 10, 1, 0, 0];
 

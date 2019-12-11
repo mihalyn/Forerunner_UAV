@@ -11,16 +11,17 @@ uav_pos = out.get('uav_pos');
 
 Radius = out.get('R');
 accel_cent = out.get('accel_cent');
+ugv_a_w = out.get('ugv_a_w');
 
 %% accel ref
 figure();
 plot(a_ref.time, a_ref.data(:,1));
 hold on
 plot(a_ref.time, a_ref.data(:,2));
-plot(a_ref.time, car_a.data(:,1));
-plot(a_ref.time, car_a.data(:,2));
+plot(a_ref.time, ugv_a_w.data(:,1));
+plot(a_ref.time, ugv_a_w.data(:,2));
 legend('ref a_x','ref a_y', 'car a_x', 'car a_y');
-ylim([-0.05, 0.05])
+ylim([-1, 1])
 % figure();
 % plot(a.time, a.data(:,3));
 % legend('a_z');
@@ -30,9 +31,9 @@ figure();
 plot(uav_a.time, uav_a.data(:,1));
 hold on
 plot(uav_a.time, uav_a.data(:,2));
-plot(car_a.time, car_a.data(:,1));
-plot(car_a.time, car_a.data(:,2));
-ylim([-0.05, 0.05])
+plot(car_a.time, ugv_a_w.data(:,1));
+plot(car_a.time, ugv_a_w.data(:,2));
+ylim([-1, 1])
 legend('uav a_x','uav a_y', 'car a_x', 'car a_y');
 
 %% vel
@@ -55,14 +56,45 @@ xlim([-30, 30])
 grid;
 pbaspect([1 1 1])
 
+% figure();
+% plot(car_pos(:,1)-uav_pos(:,1));
+% hold on
+% plot(car_pos(:,2)-uav_pos(:,2));
+
 %% R, accel_cent
 figure()
 plot(Radius.time, Radius.data);
-ylim([0 10])
-grid
+ylim([0 15])
+grid;
+title('turning circle radius');
 
 figure()
 plot(accel_cent.time, accel_cent.data);
+title('centripetal acceleration ugv');
+grid;
+
+%% UGV position vs position from integrating accel
+ugv_v_calc = [cumtrapz(ugv_a_w.time, ugv_a_w.data(:,1)) cumtrapz(ugv_a_w.time, ugv_a_w.data(:,2))];
+ugv_pos_calc = [cumtrapz(ugv_a_w.time, ugv_v_calc(:,1)) cumtrapz(ugv_a_w.time, ugv_v_calc(:,2))];
+
+figure();
+plot(ugv_pos_calc(:,1), ugv_pos_calc(:,2));
+hold on
+plot(car_pos(:,1), car_pos(:,2));
+plot(uav_pos(:,1), uav_pos(:,2));
+legend('calculated pos', 'pos', 'uav pos');
+pbaspect([1 1 1])
+ylim([-20 30])
+xlim([-20 30])
+grid;
+
+figure();
+plot(car_v.time, car_v.data(:,1));
+hold on
+plot(car_v.time, car_v.data(:,2));
+plot(car_v.time, ugv_v_calc(:,1));
+plot(car_v.time, ugv_v_calc(:,2));
+legend('car v_x', 'car v_y', 'car v_x calc', 'car v_y calc');
 
 %%
 % figure();

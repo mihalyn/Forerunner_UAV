@@ -28,7 +28,15 @@ function out = qc_update(u, traj_res, tmax)
     end
     
     accel_cent = u(10);
+    UGV_accel = u(6);
+    UGV_yaw = u(7);
+    UGV_yaw_dot = u(8);
     
+    T_WB = [cos(UGV_yaw) -sin(UGV_yaw);...
+                sin(UGV_yaw) cos(UGV_yaw)]; 
+    
+    ugv_acc_w = T_WB*[UGV_accel; sign(UGV_yaw_dot)*accel_cent];
+
     % Trajectory reference update at every tmax
     if mod(t_actual, tmax) == 0
         disp('trajectory update');
@@ -36,9 +44,7 @@ function out = qc_update(u, traj_res, tmax)
         ts = 0.025;
         
         UGV_vel = u(5);
-        UGV_accel = u(6);
-        UGV_yaw = u(7);
-        UGV_yaw_dot = u(8);
+
                       
         %UAV_vel = UAV_meas(4:6);
         %UAV_euler = UAV_meas(7:9);
@@ -101,9 +107,9 @@ function out = qc_update(u, traj_res, tmax)
         %fnplt(s);
         %fnplt(s);
         %plot(UAV_pos_current(1), UAV_pos_current(2), 'o');
-        hold off
-        legend('Purposed track', 'track reference spline', 'UAV position');
-        title('Reference track for the UAV');
+%         hold off
+%         legend('Purposed track', 'track reference spline', 'UAV position');
+%         title('Reference track for the UAV');
         
         %assignin('base', 's', s);
         %assignin('base', 'sd', sd);
@@ -127,7 +133,7 @@ function out = qc_update(u, traj_res, tmax)
 %     title('Position of the vehicles');
     
     
-    out = [traject_update; accel_cent];
+    out = [traject_update; accel_cent; ugv_acc_w];
 end
 
 
