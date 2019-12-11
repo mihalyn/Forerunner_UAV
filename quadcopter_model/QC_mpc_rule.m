@@ -17,9 +17,10 @@ function qc_out = QC_mpc_rule(u, sdd,  P, tmax)
                 %r = -K(:,:,floor(t/ts)+1)*e;    % LQ adjustment vector
 
 
-t0=u(1) - tmax*u(8);
-a = fnval(sdd, t0);
-
+%t0=u(1) - tmax*u(8);
+%a = fnval(sdd, t0);
+a = u(8:10);
+%a(3) = 0;
 %disp(a);
 % Inverted linearized equations
 
